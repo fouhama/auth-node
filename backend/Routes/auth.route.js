@@ -1,7 +1,9 @@
 import express from "express"
-import { signin, signiup, logout, verification, forgetPassword, resetPassword } from "../Controllers/auth.controller.js"
+import { signin, signiup, logout, verification, forgetPassword, resetPassword,checkToken } from "../Controllers/auth.controller.js"
+import { verifyToken } from "../middleware/verifyToken.js"
 const Route = express.Router()
 
+Route.get('/check-auth', verifyToken, checkToken)
 Route.post('/signin', signin )
 Route.post('/signup', signiup)
 Route.post('/logout', logout)
