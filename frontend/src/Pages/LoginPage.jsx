@@ -3,12 +3,15 @@ import { useState } from 'react'
 import Input from '../components/Input'
 import { LoaderIcon, LockKeyhole, Mail } from 'lucide-react'
 import { Link } from 'react-router-dom'
+import { useAuthStore } from "../../store/authSore.js"
 const LoginPage = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const isLoding =false
-  const handleLogin = (e) => {
+  const { error, isLoading, login } = useAuthStore();
+
+  const handleLogin = async(e) => {
     e.preventDefault()
+    await login(email, password)
   }
   return (
     <motion.div
@@ -23,21 +26,21 @@ const LoginPage = () => {
         </h2>
         <form onSubmit={handleLogin}>
           <Input type='text' icon={Mail} placeholder="Email Address"  value={email}  onChange={e => setEmail(e.target.value)} />
-          <Input type='password' icon={LockKeyhole} placeholder="Password" value={password} onChang={e => setPassword(e.target.value)} />
+          <Input type='password' icon={LockKeyhole} placeholder="Password" value={password} onChange={e => setPassword(e.target.value)} />
           <div className='flex items-center mb-6'>
             <Link to='/forgot-password' className='text-sm text-green-400 hover:underline'>
               Forgot password?
             </Link>
           </div>
-
+          {error && <span className='text-red-500 font-semibold text-sm mb-2'>{ error }</span>}
           <motion.button className="w-full mt-5 py-3 px-4 bg-gradient-to-r from-green-500 to-emerald-600 text-white font-bold rounded-lg shadow-lg
                     hover:from-green-600 hover:to-emerald-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 focus:ring-offset-gray-900 transition duration-200"
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
             type="submit"
-            disabled={isLoding}
+            disabled={isLoading}
           >
-            {isLoding ? <LoaderIcon className='size-6 animate-spin mx-auto' /> : 'Login' }
+            {isLoading ? <LoaderIcon className='size-6 animate-spin mx-auto' /> : 'Login' }
           </motion.button>
 
         </form>
