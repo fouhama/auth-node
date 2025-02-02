@@ -8,6 +8,8 @@ import { useAuthStore } from "../store/authSore"
 import { useEffect } from "react"
 import Home from "./Pages/Home"
 import LoadingSpinner from "./components/LoadingSpinner"
+import ForgotPasswordPage from "./Pages/ForgetPasswordPage"
+import ResetPasswordPage from "./Pages/ResetPasswordPage"
 
 
 function App() {
@@ -43,6 +45,8 @@ function App() {
         <Route path="/signup" element={<RedirectAuthenticatedUser><SignupPage /></RedirectAuthenticatedUser>} />
         <Route path="/login" element={<RedirectAuthenticatedUser><LoginPage /></RedirectAuthenticatedUser>} /> 
         <Route path="/verify-email" element={<RedirectAuthenticatedUser><EmailVerificationPage /></RedirectAuthenticatedUser>} />
+        <Route path="/forgot-password" element={<RedirectAuthenticatedUser><ForgotPasswordPage /></RedirectAuthenticatedUser>} />
+        <Route path="/reset-password/:code" element={<RedirectAuthenticatedUser><ResetPasswordPage/> </RedirectAuthenticatedUser>} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
       <Toaster/>

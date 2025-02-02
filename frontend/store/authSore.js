@@ -6,9 +6,11 @@ axios.defaults.withCredentials=true
 export const useAuthStore = create((set) => ({
     user: null,
     error: null,
+    message: null,
     isLoading: false,
     isAuthenticated: false,
     isCheckingAuth: true,
+    sended: false,
 
     signup: async (email, password, name) => {
         set({ isLoading: true, error: null })
@@ -34,7 +36,7 @@ export const useAuthStore = create((set) => ({
         set({ error: null, isLoading: true })
         try {
             await axios.post(`${URL_BACKEND}/api/auth/logout`)
-            set({isLoading:false, isAuthenticated: false})
+            set({isLoading:false, isAuthenticated: false, user:null})
         } catch (error) {
             set({ error: error.response.data.message })
             throw error
@@ -51,9 +53,29 @@ export const useAuthStore = create((set) => ({
             throw error
         }
     },
+    forgotPassword: async (email) => {
+        set({error:null, isLoading:true})
+        try {
+           const response =  await  axios.post(`${URL_BACKEND}/api/auth/forget-password`, { email })
+            set({isLoading: false, message : response.data.message, sended: true})
 
+        } catch (error) {
+            set({ isLoading: false, error: error.response.data.message || "Error send Email " })
+            throw error
+        }
+    },
+    resetPass: async (code, password) => {
+        set({ error: null, isLoading: true })
+        try {
+            const response = await axios.post(`${URL_BACKEND}/api/auth/reset-password/${code}`, {password})
+            set({ isLoading: false, message: response.data.message })
+        } catch (error) {
+            set({ isLoading: false, error: error.response.data.message || "Error reset password" })
+            throw error
+        }
+    } ,
     checkAuth: async () => {
-        set({isCheckingAuth: true, error:null })
+        set({isCheckingAuth: true, error:null , sended: false})
         try {
             const respose = await axios.get(`${URL_BACKEND}/api/auth/check-auth`)
             set({ user: respose.data.user, isAuthenticated:true, isCheckingAuth:false})
@@ -63,5 +85,6 @@ export const useAuthStore = create((set) => ({
             throw error
         }
     }
+
 
 }))
