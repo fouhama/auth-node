@@ -32,10 +32,11 @@ export const signiup = async (req, res) => {
         return res.status(200).json({
             success: true,
             message: "User created successfully",
-            user: {
-                ...user._doc,
-                password: undefined 
-            }
+              user : {...user._doc , password : undefined , verificationToken: undefined, resetPasswordtToken: undefined }
+            // user: {
+            //     ...user._doc,
+            //     password: undefined 
+            // }
         })
 
         } catch (error) {
@@ -64,7 +65,12 @@ export const verification = async (req, res) => {
         return res.status(200).json({ success: true, message: "Email verified successfully", user: { ...user._doc, password: undefined } })
     } catch (error) {
         console.log(error);
-        res.status(400).json({ success: false, message: error.message, user: {...user._doc , password: undefined } })
+        res.status(400).json({
+            success: false, message: error.message,
+            // user: { ...user._doc, password: undefined }
+            
+             user : {...user._doc , password : undefined , verificationToken: undefined, resetPasswordtToken: undefined }
+        })
     }
     
 
@@ -88,7 +94,8 @@ export const signin = async (req, res) => {
         await user.save()
         return res.status(200).json({
             success: true, message: "Logged in successfully",
-            user : {...user._doc , password : undefined }
+            user : {...user._doc , password : undefined , verificationToken: undefined, resetPasswordtToken: undefined }
+             
         })
 
     } catch (error) {
@@ -138,7 +145,11 @@ export const resetPassword = async (req, res) => {
         user.resetPsswordExpiresAt = undefined
         await user.save()
         await sendConfirmChangePassEmail(user.email)
-        return res.status(200).json({ success: true, message: "Password reset successfully" ,user: {...user._doc , password: undefined }})
+        return res.status(200).json({
+            success: true, message: "Password reset successfully"
+           
+            ,  user : {...user._doc , password : undefined , verificationToken: undefined, resetPasswordtToken: undefined }
+        })
     } catch (error) {
         console.log(error.message);
         return res.status(500).json({ success: false, message: error.message })
