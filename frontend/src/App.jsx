@@ -1,4 +1,4 @@
-import Floatingshape from "./components/floatingshape.jsx"
+import Floatingshape from "./components/floatingshape"
 import {Routes, Route, Navigate} from "react-router-dom"
 import SignupPage from "./Pages/SignupPage"
 import LoginPage from "./Pages/LoginPage"
